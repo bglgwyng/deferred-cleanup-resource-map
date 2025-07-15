@@ -2,7 +2,7 @@ export class DeferredCleanUpMap<K, V> {
 	constructor(
 		private resources: MapLike<K, Resource<V>>,
 		private create: (key: K) => V,
-		private cleanUp: (done: () => void) => () => void,
+		private cleanUp: (key: K, value: V, done: () => void) => () => void,
 	) {}
 
 	obtain(key: K): [V, () => void] {
@@ -31,7 +31,7 @@ export class DeferredCleanUpMap<K, V> {
 
 			let state = ReleaseState.WaitCleanUpSync;
 
-			const abortCleanUp = this.cleanUp(() => {
+			const abortCleanUp = this.cleanUp(key, resource.value, () => {
 				if (state === ReleaseState.WaitCleanUpSync) {
 					this.resources.delete(key);
 					state = ReleaseState.CleanedUpSync;

@@ -5,7 +5,7 @@ test("should create and release a resource", () => {
 	const createFn = vi
 		.fn()
 		.mockImplementation((key: string) => `resource-${key}`);
-	const cleanupFn = vi.fn().mockImplementation((done) => {
+	const cleanupFn = vi.fn().mockImplementation((_key, _value, done) => {
 		done();
 		return () => {};
 	});
@@ -29,7 +29,7 @@ test("should handle multiple references to the same resource", () => {
 	const createFn = vi
 		.fn()
 		.mockImplementation((key: string) => `resource-${key}`);
-	const cleanupFn = vi.fn().mockImplementation((done) => {
+	const cleanupFn = vi.fn().mockImplementation((_key, _value, done) => {
 		done();
 		return () => {};
 	});
@@ -59,7 +59,7 @@ test("should handle multiple references to the same resource", () => {
 
 test("should handle async cleanup", async () => {
 	let cleanupDone: () => void = () => {};
-	const cleanupFn = vi.fn().mockImplementation((done) => {
+	const cleanupFn = vi.fn().mockImplementation((_key, _value, done) => {
 		cleanupDone = done;
 		return () => {};
 	});
@@ -86,7 +86,7 @@ test("should abort pending cleanup when resource is re-obtained", () => {
 	let cleanupDone: () => void = () => {};
 	let abortCalled = false;
 
-	const cleanupFn = vi.fn().mockImplementation((done) => {
+	const cleanupFn = vi.fn().mockImplementation((_key, _value, done) => {
 		cleanupDone = done;
 		return () => {
 			abortCalled = true;
@@ -128,7 +128,7 @@ test("should abort pending cleanup when resource is re-obtained", () => {
 });
 
 test("should handle synchronous cleanup", () => {
-	const cleanupFn = vi.fn().mockImplementation((done) => {
+	const cleanupFn = vi.fn().mockImplementation((_key, _value, done) => {
 		// Call done synchronously
 		done();
 		return () => {};
@@ -160,7 +160,7 @@ test("should handle synchronous cleanup", () => {
 test("should handle mixed sync and async cleanup scenarios", () => {
 	let asyncCleanupDone: () => void = () => {};
 
-	const cleanupFn = vi.fn().mockImplementation((done) => {
+	const cleanupFn = vi.fn().mockImplementation((_key, _value, done) => {
 		// First call is sync, second is async
 		if (cleanupFn.mock.calls.length === 1) {
 			done(); // First cleanup is sync
@@ -202,7 +202,7 @@ test("should throw when releasing an already released resource", () => {
 	const dcm = new DeferredCleanUpMap(
 		new Map(),
 		(key) => `resource-${key}`,
-		(done) => {
+		(_key, _value, done) => {
 			done();
 			return () => {};
 		},
