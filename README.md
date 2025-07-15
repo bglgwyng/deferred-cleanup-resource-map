@@ -35,7 +35,7 @@ import { DeferredCleanUpMap } from "deferred-cleanup-map";
 const map = new DeferredCleanUpMap<number, Resource>(
   new Map(),
   (key) => new Resource(key), // create function
-  (done) => {
+  (key, value, done) => {
     // This is called when a resource is ready to be cleaned up
     const timer = setTimeout(() => {
       done(); // Call this when cleanup is complete
