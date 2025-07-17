@@ -11,7 +11,7 @@ test("should create and release a resource", () => {
 	});
 
 	const map = new Map();
-	const dcm = new DeferredCleanUpMap(map, createFn, cleanupFn);
+	const dcm = new DeferredCleanUpMap(createFn, cleanupFn, map);
 
 	// First obtain
 	const [resource, release] = dcm.obtain("test");
@@ -35,7 +35,7 @@ test("should handle multiple references to the same resource", () => {
 	});
 
 	const map = new Map();
-	const dcm = new DeferredCleanUpMap(map, createFn, cleanupFn);
+	const dcm = new DeferredCleanUpMap(createFn, cleanupFn, map);
 
 	// First obtain
 	const [resource1, release1] = dcm.obtain("test");
@@ -66,9 +66,9 @@ test("should handle async cleanup", async () => {
 
 	const map = new Map();
 	const dcm = new DeferredCleanUpMap(
-		map,
 		(key) => `resource-${key}`,
 		cleanupFn,
+		map,
 	);
 
 	// Obtain and release
@@ -95,9 +95,9 @@ test("should abort pending cleanup when resource is re-obtained", () => {
 
 	const map = new Map();
 	const dcm = new DeferredCleanUpMap(
-		map,
 		(key) => `resource-${key}`,
 		cleanupFn,
+		map,
 	);
 
 	// First obtain and release
@@ -136,9 +136,9 @@ test("should handle synchronous cleanup", () => {
 
 	const map = new Map();
 	const dcm = new DeferredCleanUpMap(
-		map,
 		(key) => `resource-${key}`,
 		cleanupFn,
+		map,
 	);
 
 	// Obtain and release
@@ -172,9 +172,9 @@ test("should handle mixed sync and async cleanup scenarios", () => {
 
 	const map = new Map();
 	const dcm = new DeferredCleanUpMap(
-		map,
 		(key) => `resource-${key}`,
 		cleanupFn,
+		map,
 	);
 
 	// First obtain and release (sync cleanup)
@@ -200,7 +200,6 @@ test("should handle mixed sync and async cleanup scenarios", () => {
 
 test("should throw when releasing an already released resource", () => {
 	const dcm = new DeferredCleanUpMap(
-		new Map(),
 		(key) => `resource-${key}`,
 		(_key, _value, done) => {
 			done();

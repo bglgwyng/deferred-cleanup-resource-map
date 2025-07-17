@@ -1,17 +1,17 @@
 export class DeferredCleanUpMap<K, V> {
 	constructor(
-		private resources: MapLike<K, Resource<V>>,
 		private create: (key: K) => V,
 		private cleanUp: (key: K, value: V, done: () => void) => () => void,
+		private container: MapLike<K, Resource<V>> = new Map(),
 	) {}
 
 	obtain(key: K): [V, () => void] {
-		let resource = this.resources.get(key);
+		let resource = this.container.get(key);
 
 		if (resource === undefined) {
 			const newValue = this.create(key);
 			resource = new Resource(newValue, 1);
-			this.resources.set(key, resource);
+			this.container.set(key, resource);
 		} else {
 			if (resource.refCount === 0) {
 				// biome-ignore lint/style/noNonNullAssertion: if `refCount` is 0, then at least one `release` must be called, so `abortCleanUp` must be set
@@ -33,11 +33,11 @@ export class DeferredCleanUpMap<K, V> {
 
 			const abortCleanUp = this.cleanUp(key, resource.value, () => {
 				if (state === ReleaseState.WaitCleanUpSync) {
-					this.resources.delete(key);
+					this.container.delete(key);
 					state = ReleaseState.CleanedUpSync;
 				} else {
 					if (resource.abortCleanUp === wrappedAbortCleanUp) {
-						this.resources.delete(key);
+						this.container.delete(key);
 					}
 				}
 			});
