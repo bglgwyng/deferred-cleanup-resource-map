@@ -1,16 +1,16 @@
 {
   "name": "deferred-cleanup-resource-map",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A deferred cleanup resource map.",
   "type": "module",
   "license": "MIT",
-  "homepage": "https://github.com/gugustinette/create-tsdown#readme",
+  "homepage": "https://github.com/bglgwyng/deferred-cleanup-resource-map#readme",
   "bugs": {
-    "url": "https://github.com/gugustinette/create-tsdown/issues"
+    "url": "https://github.com/bglgwyng/deferred-cleanup-resource-map/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gugustinette/create-tsdown.git"
+    "url": "git+https://github.com/bglgwyng/deferred-cleanup-resource-map.git"
   },
   "author": "bgl gwyng",
   "files": [
