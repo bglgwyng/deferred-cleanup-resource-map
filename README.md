@@ -29,7 +29,7 @@ before actual cleanup occurs.
 ## Basic Usage
 
 ```typescript
-import { DeferredCleanUpMap } from "deferred-cleanup-map";
+import { DeferredCleanUpMap } from "deferred-cleanup-resource-map";
 
 // Create a map with cleanup logic
 const map = new DeferredCleanUpMap<number, Resource>(
